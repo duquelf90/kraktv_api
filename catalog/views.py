@@ -12,19 +12,15 @@ class YouTubeChannelInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, channel_id):
-        api_key = (
-            settings.YOUTUBE_API_KEY
-        )  # Asegúrate de tener tu API Key en settings.py
+        api_key = settings.YOUTUBE_API_KEY
         youtube = build("youtube", "v3", developerKey=api_key)
 
         try:
-            # Hacer la solicitud para obtener información del canal
             channel_request = youtube.channels().list(
                 part="statistics,contentDetails", id=channel_id
             )
             channel_response = channel_request.execute()
 
-            # Obtener estadísticas del canal
             channel_stats = channel_response["items"][0]["statistics"]
             total_videos = channel_stats.get("videoCount", 0)
             subscriber_count = channel_stats.get("subscriberCount", 0)
@@ -37,11 +33,10 @@ class YouTubeChannelInfoView(APIView):
             videos_request = youtube.playlistItems().list(
                 part="snippet",
                 playlistId=uploads_playlist_id,
-                maxResults=10,  # Puedes cambiar este número según tus necesidades
+                maxResults=10,  
             )
             videos_response = videos_request.execute()
 
-            # Obtener detalles de cada video
             video_details = []
             total_comments = 0
             for item in videos_response["items"]:
@@ -78,7 +73,6 @@ class YouTubeChannelInfoView(APIView):
                     "other",
                 )
 
-                # Formatear la información del video
                 video_info = {
                     "video_id": video_response["items"][0]["id"],
                     "channel_name": video_response["items"][0]["snippet"][
@@ -131,7 +125,7 @@ class YouTubeChannelInfoView(APIView):
                         )
                     except Exception as e:
                         print(f"Error al guardar el objeto: {e}")
-            # # Preparar la respuesta con la información del canal y los videos
+
             response_data = {
                 "channel_id": channel_id,
                 "total_videos": total_videos,

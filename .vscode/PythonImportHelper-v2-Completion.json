@@ -643,7 +643,7 @@
         "kind": 6,
         "importPath": "catalog.views",
         "description": "catalog.views",
-        "peekOfCode": "class YouTubeChannelInfoView(APIView):\n    permission_classes = [IsAuthenticated]\n    def get(self, request, channel_id):\n        api_key = (\n            settings.YOUTUBE_API_KEY\n        )  # Asegúrate de tener tu API Key en settings.py\n        youtube = build(\"youtube\", \"v3\", developerKey=api_key)\n        try:\n            # Hacer la solicitud para obtener información del canal\n            channel_request = youtube.channels().list(",
+        "peekOfCode": "class YouTubeChannelInfoView(APIView):\n    permission_classes = [IsAuthenticated]\n    def get(self, request, channel_id):\n        api_key = settings.YOUTUBE_API_KEY\n        youtube = build(\"youtube\", \"v3\", developerKey=api_key)\n        try:\n            channel_request = youtube.channels().list(\n                part=\"statistics,contentDetails\", id=channel_id\n            )\n            channel_response = channel_request.execute()",
         "detail": "catalog.views",
         "documentation": {}
     },
